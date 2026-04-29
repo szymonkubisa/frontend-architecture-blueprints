@@ -13,6 +13,8 @@
 </template>
 
 <script setup lang="ts">
+// inheritAttrs: false lets us forward $attrs (class, placeholder, autocomplete,
+// etc.) directly onto the <input> via v-bind="$attrs" rather than the wrapper div.
 defineOptions({ inheritAttrs: false })
 
 withDefaults(
@@ -25,6 +27,7 @@ withDefaults(
   { type: 'text', modelValue: '', error: '' },
 )
 
+// Follows Vue's v-model convention so the parent can use v-model on this component.
 const emit = defineEmits<{
   'update:modelValue': [value: string]
 }>()

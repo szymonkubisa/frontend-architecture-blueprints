@@ -40,6 +40,8 @@ import BaseInput from '@/shared/components/BaseInput.vue'
 import BaseButton from '@/shared/components/BaseButton.vue'
 import type { LoginPayload } from '../types/auth.types'
 
+// Emit the validated payload to the parent view rather than calling the API
+// directly, keeping this component unaware of the network layer and testable in isolation.
 const emit = defineEmits<{
   submit: [payload: LoginPayload]
 }>()
@@ -49,6 +51,8 @@ const errors = reactive({ email: '', password: '' })
 const submitError = ref('')
 const isLoading = ref(false)
 
+// Client-side validation runs before the network request to give instant
+// feedback without a round-trip. Returns true only when both fields pass.
 function validate(): boolean {
   errors.email = ''
   errors.password = ''
@@ -74,8 +78,12 @@ async function handleSubmit() {
 
   isLoading.value = true
   try {
+    // Spread form to emit a plain object — avoids passing the reactive proxy
+    // to the parent, which could lead to unexpected reactivity side effects.
     emit('submit', { ...form })
   } finally {
+    // Always re-enable the button even if the parent's handler throws, so
+    // the user can correct their credentials and try again.
     isLoading.value = false
   }
 }

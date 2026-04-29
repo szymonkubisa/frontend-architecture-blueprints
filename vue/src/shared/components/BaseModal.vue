@@ -22,6 +22,8 @@
 </template>
 
 <script setup lang="ts">
+// modelValue follows the Vue v-model convention: the parent binds
+// `v-model="isOpen"` and we emit `update:modelValue` to close.
 withDefaults(
   defineProps<{
     modelValue: boolean

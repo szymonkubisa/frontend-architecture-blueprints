@@ -30,6 +30,9 @@ const authStore = useAuthStore()
 
 async function handleLogin(payload: LoginPayload) {
   await authStore.login(payload)
+  // After a successful login, go back to wherever the user was trying to reach
+  // before the router guard redirected them here. Fall back to the dashboard
+  // if there is no saved redirect path (e.g. direct navigation to /login).
   const redirect = (route.query.redirect as string) ?? { name: ROUTE_NAMES.DASHBOARD }
   router.push(redirect)
 }

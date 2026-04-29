@@ -24,6 +24,8 @@ export default function Button({
   return (
     <button
       {...rest}
+      // Disable the button while a loading operation is in progress to prevent
+      // duplicate submissions, in addition to any explicit `disabled` prop.
       disabled={disabled || loading}
       className={[
         styles.btn,
@@ -36,6 +38,8 @@ export default function Button({
         .filter(Boolean)
         .join(' ')}
     >
+      {/* Show a spinner inside the button instead of swapping out the label
+          so the button width stays stable during the loading state. */}
       {loading && <span className={styles.spinner} aria-hidden="true" />}
       {children}
     </button>

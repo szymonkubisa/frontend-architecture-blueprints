@@ -14,6 +14,8 @@ export default function AppLayout({ children }: Props) {
   const [logoutMutation] = useLogoutMutation()
   const navigate = useNavigate()
 
+  // Call the server-side logout mutation first (invalidates the refresh token),
+  // then redirect to /login regardless of whether the server call succeeds.
   async function handleLogout() {
     await logoutMutation()
     navigate(ROUTE_PATHS.LOGIN)
