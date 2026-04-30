@@ -23,6 +23,7 @@ export default function DashboardPage() {
     setError(null)
     try {
       const { data } = await apiClient.get(API_PATHS.DASHBOARD.STATS)
+      // The API wraps the payload in a `data` envelope — unwrap one level.
       setStats(data.data)
     } catch (e) {
       setError(e instanceof Error ? e.message : 'Failed to load stats')
@@ -31,6 +32,8 @@ export default function DashboardPage() {
     }
   }
 
+  // Load stats once on mount. loadStats is also wired to the Retry button
+  // so it's defined outside useEffect to keep it accessible in the JSX below.
   useEffect(() => {
     loadStats()
   }, [])

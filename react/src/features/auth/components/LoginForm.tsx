@@ -15,6 +15,8 @@ export default function LoginForm({ onSubmit, error }: Props) {
   const [fieldErrors, setFieldErrors] = useState({ email: '', password: '' })
   const [isLoading, setIsLoading] = useState(false)
 
+  // Client-side validation runs before the network request to give instant
+  // feedback without a round-trip. Returns true only when both fields are valid.
   function validate(): boolean {
     const next = { email: '', password: '' }
     if (!email) {
@@ -36,8 +38,12 @@ export default function LoginForm({ onSubmit, error }: Props) {
     if (!validate()) return
     setIsLoading(true)
     try {
+      // Delegate the actual API call to the parent (LoginPage) so this
+      // component stays unaware of the network layer and is easy to test.
       await onSubmit({ email, password })
     } finally {
+      // Always re-enable the button, even when the login call throws, so
+      // the user can correct their credentials and try again.
       setIsLoading(false)
     }
   }

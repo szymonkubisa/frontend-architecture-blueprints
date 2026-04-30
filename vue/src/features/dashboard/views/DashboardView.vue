@@ -31,13 +31,18 @@ import apiClient from '@/core/api/axios'
 import { API_PATHS } from '@/constants/app.constants'
 
 const authStore = useAuthStore()
+// useLoading manages the isLoading flag and error string automatically so
+// this component only has to deal with the happy-path data.
 const { isLoading, error, withLoading } = useLoading()
 
 const stats = ref<Array<{ label: string; value: string | number; change: number }>>([])
 
+// loadStats is defined outside onMounted so the template's Retry button can
+// also call it without duplicating the fetch logic.
 async function loadStats() {
   await withLoading(async () => {
     const { data } = await apiClient.get(API_PATHS.DASHBOARD.STATS)
+    // The API wraps the payload in a `data` envelope — unwrap one level.
     stats.value = data.data
   })
 }
